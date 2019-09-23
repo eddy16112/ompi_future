@@ -23,7 +23,7 @@ LIB := $(LIB) $(LIB_EXT)
 
 CFLAGS += $(INC)
 
-TARGET = hello_world pingpong heat_2d_future
+TARGET = hello_world pingpong heat_2d_future multiple_future
 all: $(TARGET)
 	
 .PRECIOUS: %.cc %.o
@@ -43,6 +43,9 @@ pingpong.o: pingpong.cc
 heat_2d_future.o: heat_2d_future.cc
 	$(CC) -c $(CFLAGS) $<
 	
+multiple_future.o: multiple_future.cc
+	$(CC) -c $(CFLAGS) $<
+	
 hello_world: hello_world.o task_runtime.o ompi_future.o
 	$(CC) $^ $(LIB) $(LDFLAGS) -o $@ 
 	
@@ -50,6 +53,9 @@ pingpong: pingpong.o task_runtime.o ompi_future.o
 	$(CC) $^ $(LIB) $(LDFLAGS) -o $@ 
 	
 heat_2d_future: heat_2d_future.o task_runtime.o ompi_future.o
+	$(CC) $^ $(LIB) $(LDFLAGS) -o $@ 
+	
+multiple_future: multiple_future.o task_runtime.o ompi_future.o
 	$(CC) $^ $(LIB) $(LDFLAGS) -o $@ 
 
 

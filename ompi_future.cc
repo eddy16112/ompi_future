@@ -16,7 +16,7 @@ typedef struct sendrecv_task_args_s {
 
 typedef Processor::TaskFuncPtr ompi_codelet_t;
 
-int ompi_future_wait(ompi_future_t *future);
+int ompi_futures_wait(ompi_future_t *futures, int futures_size);
 int ompi_fsend(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm, ompi_future_t *infuture, int infuture_size, ompi_future_t *outfuture);
 int ompi_frecv(void *buf, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, ompi_future_t *infuture, int infuture_size, ompi_future_t *outfuture);
 int ompi_init_fmodule(int argc, char **argv);
@@ -37,7 +37,12 @@ int MPI_Frecv(void *buf, int count, MPI_Datatype datatype, int source, int tag, 
 
 int MPI_Waitfuture(MPI_Future *future)
 {
-  return ompi_future_wait(future);
+  return ompi_futures_wait(future, 1);
+}
+
+int MPI_Waitfutures(MPI_Future *futures, int futures_size)
+{
+  return ompi_futures_wait(futures, futures_size);
 }
 
 int MPI_Init_fmodule(int argc, char **argv)
@@ -94,9 +99,18 @@ void sendrecv_task(const void *args, size_t arglen,
   }
 }
 
-int ompi_future_wait(ompi_future_t *future)
+int ompi_futures_wait(ompi_future_t *futures, int futures_size)
 {
-  future->f.wait();
+  assert(futures_size > 0);
+  if (futures_size == 1) {
+    futures->f.wait();
+  } else {
+    FutureList fl;
+    for (int i = 0; i < futures_size; i++) {
+      fl.add_future(futures[i].f);
+    }
+    fl.wait();
+  }
   return 0;
 }
 
@@ -117,7 +131,11 @@ int ompi_fsend(const void *buf, int count, MPI_Datatype datatype, int dest, int 
     if (infuture_size == 1) {
       outfuture->f = internal_rt.launch_mpi_task(sendrecv_task, &args, sizeof(args), infuture->f);
     } else {
-      
+      FutureList fl;
+      for (int i = 0; i < infuture_size; i++) {
+        fl.add_future(infuture[i].f);
+      }
+      outfuture->f = internal_rt.launch_mpi_task(sendrecv_task, &args, sizeof(args), fl);
     }
   }
   return 0;
@@ -140,7 +158,11 @@ int ompi_frecv(void *buf, int count, MPI_Datatype datatype, int source, int tag,
     if (infuture_size == 1) {
       outfuture->f = internal_rt.launch_mpi_task(sendrecv_task, &args, sizeof(args), infuture->f);
     } else {
-      
+      FutureList fl;
+      for (int i = 0; i < infuture_size; i++) {
+        fl.add_future(infuture[i].f);
+      }
+      outfuture->f = internal_rt.launch_mpi_task(sendrecv_task, &args, sizeof(args), fl);
     }
   }
   return 0;
@@ -181,7 +203,11 @@ int ompi_fexecute(ompi_codelet_t codelet, void *args, size_t arglen, ompi_future
     if (infuture_size == 1) {
       outfuture->f = internal_rt.launch_user_task(codelet, args, arglen, infuture->f);
     } else {
-      
+      FutureList fl;
+      for (int i = 0; i < infuture_size; i++) {
+        fl.add_future(infuture[i].f);
+      }
+      outfuture->f = internal_rt.launch_user_task(codelet, args, arglen, fl);
     }
   }
   return 0;

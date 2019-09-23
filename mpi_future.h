@@ -19,6 +19,8 @@ int MPI_Frecv(void *buf, int count, MPI_Datatype datatype, int source, int tag, 
 
 int MPI_Waitfuture(MPI_Future *future);
 
+int MPI_Waitfutures(MPI_Future *futures, int futures_size);
+
 int MPI_Fexecute(MPI_Codelet codelet, void *args, size_t arglen, MPI_Future *infuture, int infuture_size, MPI_Future *outfuture);
 
 int MPI_Init_fmodule(int argc, char **argv);
