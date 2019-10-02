@@ -288,6 +288,7 @@ int main(int argc, char **argv)
  //  sleep(20);
   
    MPI_Init_fmodule(argc, argv);
+   MPI_Register_codelet(heat);
    MPI_Register_codelet(update_task);
    MPI_Set_top(heat);
    MPI_Start_fmodule();

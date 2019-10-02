@@ -41,9 +41,9 @@ public:
     if (realm_event == Event::NO_EVENT ) {
       realm_event = f.realm_event;
     } else {
-      Event tmp_event = Event::NO_EVENT;
-      tmp_event = Event::merge_events(tmp_event, f.realm_event);
-      realm_event = tmp_event;
+  //    Event tmp_event = Event::NO_EVENT;
+      realm_event = Event::merge_events(realm_event, f.realm_event);
+    //  realm_event = tmp_event;
     }
   }
   void wait()

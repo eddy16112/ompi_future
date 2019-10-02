@@ -43,7 +43,7 @@ void multiple_future(const void *args, size_t arglen,
   } else {
     MPI_Future send_future;
     if (rank == 1) {
-      sleep(5);
+    //  sleep(5);
     }
     MPI_Fsend(&rank, 1, MPI_INT, 0, rank, MPI_COMM_WORLD, NULL, 0, &send_future);
     MPI_Waitfuture(&send_future);
@@ -57,6 +57,7 @@ int main(int argc, char **argv)
   MPI_Init_thread(NULL, NULL, MPI_THREAD_SERIALIZED, &provided);
   
   MPI_Init_fmodule(argc, argv);
+  MPI_Register_codelet(multiple_future);
   MPI_Register_codelet(revise);
   MPI_Set_top(multiple_future);
   MPI_Start_fmodule();

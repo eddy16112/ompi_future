@@ -67,6 +67,7 @@ int main(int argc, char **argv)
   MPI_Init_thread(NULL, NULL, MPI_THREAD_SERIALIZED, &provided);
   
   MPI_Init_fmodule(argc, argv);
+  MPI_Register_codelet(pingpong);
   MPI_Register_codelet(revise);
   MPI_Set_top(pingpong);
   MPI_Start_fmodule();

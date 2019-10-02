@@ -4,8 +4,8 @@
 
 CC         = mpic++
 
-CFLAGS     = -O2 -fPIC -std=c++11 -ldl -rdynamic -lrt
-LDFLAGS    = -Wall -O2 -std=c++11 -ldl -rdynamic -lrt
+CFLAGS     = -O0 -ggdb -fPIC -std=c++11 -ldl -rdynamic -lrt
+LDFLAGS    = -Wall -O0 -ggdb -std=c++11 -ldl -rdynamic -lrt
 
 REALM_DIR = /home/wwu12/legion-install
 
@@ -23,7 +23,7 @@ LIB := $(LIB) $(LIB_EXT)
 
 CFLAGS += $(INC)
 
-TARGET = hello_world pingpong heat_2d_future multiple_future
+TARGET = hello_world hello_world_runtime pingpong heat_2d_future multiple_future
 all: $(TARGET)
 	
 .PRECIOUS: %.cc %.o
@@ -32,6 +32,9 @@ task_runtime.o: task_runtime.cc task_runtime.h
 	$(CC) -c $(CFLAGS) $<
 	
 ompi_future.o: ompi_future.cc mpi_future.h
+	$(CC) -c $(CFLAGS) $<
+
+hello_world_runtime.o: hello_world_runtime.cc
 	$(CC) -c $(CFLAGS) $<
 
 hello_world.o: hello_world.cc
@@ -46,6 +49,9 @@ heat_2d_future.o: heat_2d_future.cc
 multiple_future.o: multiple_future.cc
 	$(CC) -c $(CFLAGS) $<
 	
+hello_world_runtime: hello_world_runtime.o task_runtime.o ompi_future.o
+	$(CC) $^ $(LIB) $(LDFLAGS) -o $@ 
+
 hello_world: hello_world.o task_runtime.o ompi_future.o
 	$(CC) $^ $(LIB) $(LDFLAGS) -o $@ 
 	

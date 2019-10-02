@@ -171,7 +171,6 @@ int ompi_frecv(void *buf, int count, MPI_Datatype datatype, int source, int tag,
 int ompi_init_fmodule(int argc, char **argv)
 {
   internal_rt.init(&argc, &argv);
-  internal_rt.register_task(sendrecv_task);
   return 0;
 }
 
@@ -183,7 +182,7 @@ int ompi_register_codelet(ompi_codelet_t codelet)
 
 int ompi_set_top(ompi_codelet_t codelet)
 {
-  internal_rt.register_task(codelet);
+  internal_rt.register_task(sendrecv_task);
   internal_rt.set_top_level_task(codelet);
 }
 

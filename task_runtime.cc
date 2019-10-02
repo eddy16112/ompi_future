@@ -49,6 +49,9 @@ bool TaskRuntime::init(int *argc, char ***argv)
     printf("rank %d, comp processor %llx\n", rank, it->id);
   }
   
+  task_id_count = Processor::TASK_ID_FIRST_AVAILABLE;
+  printf("taskid %d\n", task_id_count);
+  
   return true;
 }
 
@@ -132,7 +135,7 @@ void TaskRuntime::set_top_level_task_by_id(Processor::TaskFuncID task_id)
   assert(p.exists());
 
   // collective launch of a single task - everybody gets the same finish event
-  top_level_event = realm_rt.collective_spawn(p, task_id, 0, 0);
+  top_level_event = realm_rt.collective_spawn(p, task_id, NULL, 0);
 }
 
 Processor & TaskRuntime::get_comp_processor()
