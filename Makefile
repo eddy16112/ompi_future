@@ -3,9 +3,15 @@
 #endif
 
 CC         = mpic++
+DEBUG=0
 
-CFLAGS     = -O0 -ggdb -fPIC -std=c++11 -ldl -rdynamic -lrt
-LDFLAGS    = -Wall -O0 -ggdb -std=c++11 -ldl -rdynamic -lrt
+ifeq ($(strip $(DEBUG)),0)
+	CFLAGS     = -O3 -fPIC -std=c++11 -ldl -rdynamic -lrt
+	LDFLAGS    = -Wall -O3 -std=c++11 -ldl -rdynamic -lrt
+else
+	CFLAGS     = -O0 -ggdb -fPIC -std=c++11 -ldl -rdynamic -lrt
+	LDFLAGS    = -Wall -O0 -ggdb -std=c++11 -ldl -rdynamic -lrt
+endif
 
 REALM_DIR = /home/wwu12/legion-install
 

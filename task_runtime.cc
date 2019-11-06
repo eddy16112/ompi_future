@@ -168,10 +168,10 @@ Future TaskRuntime::launch_task_internal(Processor::TaskFuncPtr taskptr, void *a
   Processor proc;
   if (task_type == USER_TASK) {
     proc = get_comp_processor(); 
-    printf("rank %d, launch comp task internal processor %llx\n", rank, proc.id);
+  //  printf("rank %d, launch comp task internal processor %llx\n", rank, proc.id);
   } else {
     proc = comm_processor;
-    printf("rank %d, launch comm task internal processor %llx\n", rank, proc.id);
+ //   printf("rank %d, launch comm task internal processor %llx\n", rank, proc.id);
   }
   future.realm_event = spawn_realm_task(task_id, args, arglen, proc, e);
   return future;
