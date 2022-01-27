@@ -3,7 +3,7 @@
 #endif
 
 CC         = mpic++
-DEBUG=0
+DEBUG=1
 
 ifeq ($(strip $(DEBUG)),0)
 	CFLAGS     = -O3 -fPIC -std=c++11 -ldl -rdynamic -lrt
@@ -13,7 +13,7 @@ else
 	LDFLAGS    = -Wall -O0 -ggdb -std=c++11 -ldl -rdynamic -lrt
 endif
 
-REALM_DIR = /home/wwu12/legion-install
+REALM_DIR = /vast/home/wwu/legion-install
 
 
 # Include directories
@@ -21,7 +21,7 @@ INC        = -I$(REALM_DIR)/include
 INC_EXT    = 
 
 # Location of the libraries.
-LIB        = -L$(REALM_DIR)/lib64 -lrealm -llegion
+LIB        = -L$(REALM_DIR)/lib64 -lrealm
 LIB_EXT    = 
 
 INC := $(INC) $(INC_EXT)
